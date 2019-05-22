@@ -11,6 +11,15 @@ registry-post-release-hook() {
     return 0
   fi
 
+  dokku_log_info1 "Checking if we should push the image to registry" 
+  dokku_log_info1 "Checking if we should push the image to registry"
+  if [[ "$(fn-registry-push-image "$APP")" == "false" ]]; then
+    dokku_log_info1 "Pushing image to registry has been skipped"
+    return 0
+  else 
+    dokku_log_info1 "Pushing image to registry for $APP"
+  fi
+
   dokku_log_info1 "Pushing image to registry"
   fn-registry-tag-increment "$APP"
   fn-registry-push "$APP" "$(fn-registry-tag-latest-local "$APP")"
